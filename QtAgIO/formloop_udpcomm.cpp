@@ -49,7 +49,7 @@ void FormLoop::LoadUDPNetwork()
 
     //set up the connection
     //this is the part that listens
-    if(!udpSocket->bind(QHostAddress::Any, ethUDP.portToListen))
+    if(!udpSocket->bind(QHostAddress::Any, ethUDP.portToListen)) //TODO settings
     {
         qDebug() << "Failed to bind udpSocket: " << udpSocket->errorString();
         agio->setProperty("ethernetConnected", false);
@@ -235,12 +235,15 @@ void FormLoop::ReceiveFromUDP()
             {
                 if (data[2] == 126)  //steer module
                 {
+                    //scanReply.steerIP = data[5].ToString() + "." + data[6].ToString() + "." + data[7].ToString() + "." + data[8].ToString();
+                    //this should do the same as the above line did in cs
                     scanReply.steerIP = QString::fromLatin1(data.mid(5, 4)).replace(" ", ".");
 
                     scanReply.subnet[0] = data[9];
                     scanReply.subnet[1] = data[10];
                     scanReply.subnet[2] = data[11];
 
+                    //scanReply.subnetStr = data[9].ToString() + "." + data[10].ToString() + "." + data[11].ToString();
                     scanReply.subnetStr = QString::fromLatin1(data.mid(9, 3)).replace(" ", ".");
 
                     scanReply.isNewData = true;
@@ -249,12 +252,15 @@ void FormLoop::ReceiveFromUDP()
                 //
                 else if (data[2] == 123)   //machine module
                 {
+                    //scanReply.machineIP = data[5].ToString() + "." + data[6].ToString() + "." + data[7].ToString() + "." + data[8].ToString();
 
                     scanReply.machineIP = QString::fromLatin1(data.mid(5, 4)).replace(" ", ".");
 
                     scanReply.subnet[0] = data[9];
                     scanReply.subnet[1] = data[10];
                     scanReply.subnet[2] = data[11];
+
+                    //scanReply.subnetStr = data[9].ToString() + "." + data[10].ToString() + "." + data[11].ToString();
 
                     scanReply.subnetStr = QString::fromLatin1(data.mid(9, 3)).replace(" ", ".");
 
@@ -264,12 +270,15 @@ void FormLoop::ReceiveFromUDP()
                 }
                 else if (data[2] == 121)   //IMU Module
                 {
+                    //scanReply.IMU_IP = data[5].ToString() + "." + data[6].ToString() + "." + data[7].ToString() + "." + data[8].ToString();
+
                     scanReply.IMU_IP = QString::fromLatin1(data.mid(5, 4)).replace(" ", ".");
 
                     scanReply.subnet[0] = data[9];
                     scanReply.subnet[1] = data[10];
                     scanReply.subnet[2] = data[11];
 
+                    //scanReply.subnetStr = data[9].ToString() + "." + data[10].ToString() + "." + data[11].ToString();
                     scanReply.subnetStr = QString::fromLatin1(data.mid(9, 3)).replace(" ", ".");
 
                     scanReply.isNewData = true;
@@ -278,11 +287,15 @@ void FormLoop::ReceiveFromUDP()
 
                 else if (data[2] == 120)    //GPS module
                 {
+                    //scanReply.GPS_IP = data[5].ToString() + "." + data[6].ToString() + "." + data[7].ToString() + "." + data[8].ToString();
+
                     scanReply.GPS_IP = QString::fromLatin1(data.mid(5, 4)).replace(" ", ".");
 
                     scanReply.subnet[0] = data[9];
                     scanReply.subnet[1] = data[10];
                     scanReply.subnet[2] = data[11];
+
+                    //scanReply.subnetStr = data[9].ToString() + "." + data[10].ToString() + "." + data[11].ToString();
 
                     scanReply.subnetStr = QString::fromLatin1(data.mid(9, 3)).replace(" ", ".");
 
@@ -312,7 +325,7 @@ void FormLoop::ReceiveFromUDP()
 
         else if (data[0] == 36 && (data[1] == 71 || data[1] == 80 || data[1] == 75))
         {
-            rawBuffer += QString::fromLatin1(data);
+            rawBuffer += QString::fromLatin1(data); //is this right? David
               ParseNMEA(rawBuffer);
             if(!haveWeSentToParser) {
                   qDebug() << "sent to parser";
